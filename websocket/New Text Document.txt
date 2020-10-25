@@ -1,0 +1,42 @@
+const ws = new WebSocket("ws://wsc.2123.io/");
+ws.binaryType = "arraybuffer";
+let token;
+let command;
+ws.onopen = function() {
+  const regName = { name: "mrDreaml", command: "challenge accepted" };
+  ws.send(JSON.stringify(regName));
+};
+let arrBuff;
+ws.onmessage = function(e) {
+  try {
+    res = JSON.parse(e.data);
+    if (res.message === "You successfully accept challenge") {
+      token = res.token;
+      command = "arithmetic";
+      ws.send(JSON.stringify({ token, command }));
+    }
+    if (res.name === "arithmetic") {
+      const answer = eval(res.task.values.join(res.task.sign));
+      ws.send(JSON.stringify({ token, command, answer }));
+    }
+    if (res.message === "You solve the task") {
+      command = res.next;
+      ws.send(JSON.stringify({ token, command }));
+    }
+    if (res.name === "function_evaluation") {
+      const answer = eval(res.task.fn)();
+      ws.send(JSON.stringify({ token, command, answer }));
+    }
+    if (res.name === "binary_arithmetic") {
+      arrBuff = res.task.bits;
+    }
+  } catch (err) {
+    console.log(e.data.slice(0,arrBuff), arrBuff);
+    const answer = e.data.slice(0,arrBuff);
+    ws.send(JSON.stringify({ token, command, answer }));
+  }
+  console.log(e.data);
+};
+ws.onerror = function() {};
+ws.onclose = function() {};
+//ws.close();

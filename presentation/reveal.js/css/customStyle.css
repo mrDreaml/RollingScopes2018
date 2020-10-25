@@ -1,0 +1,58 @@
+.title-text {
+  font-size: 1.5em !important;
+}
+
+.title-text span {
+  padding: 0 15px !important;
+  color: #333 !important;
+  background: rgba(255, 255, 255, 0.55);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  font-family: "Ubuntu", sans-serif !important;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  text-transform: none !important;
+  font-weight: 500 !important;
+}
+
+p {
+  text-align: left;
+  font-weight: 300 !important;
+}
+
+b {
+  font-weight: 400 !important;
+  color: #e77;
+}
+
+a {
+  font-size: 0.45em !important;
+}
+
+.fragments {
+  margin: 40px 0 !important;
+}
+
+code {
+  max-height: none !important;
+}
+
+pre {
+  font-size: 0.35em !important;
+  -webkit-box-shadow: none !important;
+          box-shadow: none !important;
+}
+/*# sourceMappingURL=customStyle.css.map */

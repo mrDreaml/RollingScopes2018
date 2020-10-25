@@ -1,0 +1,96 @@
+// new line style
+* {
+  font-family: "Lato", sans-serif;
+}
+.bg-gray {
+  background: #eee;
+}
+.flex-end {
+  justify-content: flex-end;
+}
+body {
+  margin: 0;
+  padding: 0;
+  width: 100wh;
+}
+.container {
+  width: 1100px;
+  margin: 0 auto;
+}
+img {
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.45);
+}
+.round-img {
+  border-radius: 50%;
+}
+.row {
+  display: flex;
+  padding: 5px;
+}
+.col {
+  display: flex;
+  flex-direction: column;
+  padding: 0 25px;
+}
+.col-center {
+  margin: auto;
+}
+.btn {
+  margin: 5px;
+  padding: 10px 20px;
+  background: #faa;
+  border-radius: 5px;
+  color: #fff;
+  cursor: default;
+  transition: all 0.1s ease-in-out;
+
+  &:hover {
+    background: #ccc;
+    transition: all 0.4s ease-in-out;
+  }
+}
+
+table {
+  margin: auto;
+  width: 100%;
+  border-spacing: 0;
+  overflow: hidden;
+  animation-name: table-show;
+  animation-duration: 0.4s;
+  animation-timing-function: ease-in-out;
+  text-align: center;
+
+  @keyframes table-show {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  tr td {
+    padding: 20px;
+  }
+
+  tr td:first-child{
+    text-align: left;
+  }
+  thead {
+    background: #333;
+    color: #eee;
+    font-weight: 500;
+    cursor: default;
+  }
+  tbody {
+    tr:hover {
+      color: #f99;
+    }
+    tr td:nth-child(n + 2) {
+      cursor: default;
+    }
+    tr:nth-child(even) {
+      background: #f5f5f5;
+    }
+  }
+}

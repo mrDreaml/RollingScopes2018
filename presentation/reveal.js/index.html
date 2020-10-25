@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+
+    <title>What is a Promise?</title>
+
+    <link rel="stylesheet" href="css/reveal.css" />
+	<link rel="stylesheet" href="css/theme/white.css" />
+    <link rel="stylesheet" href="css/customStyle.css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,500"
+      rel="stylesheet"
+	/>
+
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" href="lib/css/github-gist.css" />
+
+    <!-- Printing and PDF exports -->
+    <script>
+      var link = document.createElement("link");
+      link.rel = "stylesheet";
+      link.type = "text/css";
+      link.href = window.location.search.match(/print-pdf/gi)
+        ? "css/print/pdf.css"
+        : "css/print/paper.css";
+      document.getElementsByTagName("head")[0].appendChild(link);
+    </script>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+
+		<section 
+		data-background-image="https://img.lookmytrips.com/images/look63k2/big-563ca0deff93675d35037b75-56a37dc078ef8-1ba6ve0.jpg">
+          <h1 class="title-text"><span>What Is a Promise?</span></h1>
+		</section>
+		
+        <section>
+          <section>
+			  <h2>Promise</h2>
+			</section>
+          <section>
+            <h4>A Promise is in one of these states:</h4>
+            <div class="fragments">
+              <p class="fragment fade-right" data-fragment-index="1">
+                <b>pending:</b> hasn't fulfilled or rejected yet
+              </p>
+              <p class="fragment fade-right" data-fragment-index="2">
+                <b>fulfilled:</b> meaning that the operation completed
+                successfully.
+              </p>
+              <p class="fragment fade-right" data-fragment-index="3">
+                <b>rejected:</b> meaning that the operation failed.
+              </p>
+            </div>
+          </section>
+          <section>
+			<h4>Promise creation</h4>
+              <pre class="javascript hljs">
+			  <code data-trim data-noescape>
+					const myPromise = new Promise((resolve, reject) => {
+						// do something asynchronous which eventually calls either:
+						//
+						resolve("success"); // fulfilled
+						// or
+						reject("failure reason"); // rejected
+					  });
+					  myPromise.then(
+						  function (successMsg){
+							  console.log(successMsg);
+						  },
+						  function (err){
+							  console.log(err);
+						  }
+					  );
+			  </code>
+			</pre>
+		  </section>
+		  <section>
+			  <h4>
+					async / await
+			  </h4>
+		  </section>
+		  <section>
+			  	<h4>Example:</h4>
+				<pre class="javascript hljs">
+						<code data-trim data-noescape>
+								const request = async (url) => {
+									const res = await fetch(url);
+									const json = await res.json();
+									return json;
+								  };
+								  
+						</code>
+					  </pre>
+		  </section>
+          <section>
+			  <h3>Chain Flow</h3>
+			</section>
+          <section>
+            <pre class="javascript hljs">
+						<code data-trim data-noescape>
+								var p = Promise.resolve( 21 );
+
+								var p2 = p.then( function(v){
+									console.log( v );	// 21
+								
+									// fulfill `p2` with value `42`
+									return v * 2;
+								} );
+								
+								// chain off `p2`
+								p2.then( function(v){
+									console.log( v );	// 42
+								} );
+						</code>
+					  </pre>
+          </section>
+          <section>
+            <h4>Another variant</h4>
+            <pre class="javascript hljs">
+					<code data-trim data-noescape>
+							var p = Promise.resolve( 21 );
+
+							p.then( function(v){
+								console.log( v );	// 21
+
+								// fulfill the chained promise with value `42`
+								return v * 2;
+							} )
+							// here's the chained promise
+							.then( function(v){
+								console.log( v );	// 42
+							} );
+					</code>
+				  </pre>
+          </section>
+          <section><h4>.catch()</h4></section>
+          <section>
+            <pre class="javascript hljs">
+						<code data-trim data-noescape>
+								var p = Promise.resolve( 42 );
+
+								p.then(
+									function fulfilled(msg){
+										// numbers don't have string functions,
+										// so will throw an error
+										console.log( msg.toLowerCase() );
+									}
+								)
+								.catch( handleErrors );
+						</code>
+					  </pre>
+          </section>
+          <section>
+            <h5>
+              What happens if handleErrors(..) itself also has an error in it?
+              Who catches that?
+            </h5>
+          </section>
+          <section><h4>.done()</h4></section>
+          <section>
+            <pre class="javascript hljs">
+							<code data-trim data-noescape>
+									var p = Promise.resolve( 42 );
+
+									p.then(
+										function fulfilled(msg){
+											// numbers don't have string functions,
+											// so will throw an error
+											console.log( msg.toLowerCase() );
+										}
+									)
+									.done( null, handleErrors );
+
+									// if `handleErrors(..)` caused its own exception, it would
+									// be thrown globally here
+							</code>
+						  </pre>
+          </section>
+          <section><h3>Promise Patterns</h3></section>
+          <section><h4>Promise.all([ .. ])</h4></section>
+          <section>
+            <pre class="javascript hljs">
+							<code data-trim data-noescape>
+									// `request(..)` is a Promise-aware Ajax utility,
+									// like we defined earlier in the chapter
+
+									var p1 = request( "http://some.url.1/" );
+									var p2 = request( "http://some.url.2/" );
+
+									Promise.all( [p1,p2] )
+									.then( function(msgs){
+										// both `p1` and `p2` fulfill and pass in
+										// their messages here
+										return request(
+											"http://some.url.3/?v=" + msgs.join(",")
+										);
+									} )
+									.then( function(msg){
+										console.log( msg );
+									} );
+							</code>
+						  </pre>
+          </section>
+          <section><h4>Promise.race([ .. ])</h4></section>
+          <section>
+            <pre class="javascript hljs">
+						<code data-trim data-noescape>
+								// `request(..)` is a Promise-aware Ajax utility,
+								// like we defined earlier in the chapter
+								
+								var p1 = request( "http://some.url.1/" );
+								var p2 = request( "http://some.url.2/" );
+								
+								Promise.race( [p1,p2] )
+								.then( function(msg){
+									// either `p1` or `p2` will win the race
+									return request(
+										"http://some.url.3/?v=" + msg
+									);
+								} )
+								.then( function(msg){
+									console.log( msg );
+								} );
+						</code>
+					  </pre>
+          </section>
+		</section>
+
+		<section>
+			<section>
+					<h2>Practical application</h2>
+			</section>
+			<section>
+					<pre class="javascript hljs">
+							<code data-trim data-noescape>
+									function get(url) {
+										// Return a new promise.
+										return new Promise(function(resolve, reject) {
+										  // Do the usual XHR stuff
+										  var req = new XMLHttpRequest();
+										  req.open('GET', url);
+									  
+										  req.onload = function() {
+											// This is called even on 404 etc
+											// so check the status
+											if (req.status == 200) {
+											  // Resolve the promise with the response text
+											  resolve(req.response);
+											}
+											else {
+											  // Otherwise reject with the status text
+											  // which will hopefully be a meaningful error
+											  reject(Error(req.statusText));
+											}
+										  };
+									  
+										  // Handle network errors
+										  req.onerror = function() {
+											reject(Error("Network Error"));
+										  };
+									  
+										  // Make the request
+										  req.send();
+										});
+									  }
+							</code>
+						  </pre>
+			</section>
+		</section>
+
+		<section>
+			<section>
+					<h2>The End</h2>
+			</section>
+			<section>
+				<h4>Useful links:</h4>
+				<p>
+				<a href="https://github.com/mrDreaml/you-dont-know-js-ru/blob/master/async%20%26%20performance/ch3.md">
+					https://github.com/mrDreaml/you-dont-know-js-ru/blob/master/async%20%26%20performance/ch3.md
+				</a>
+				<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">
+					https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
+				</a>
+				<a href="https://developers.google.com/web/fundamentals/primers/promises">
+					https://developers.google.com/web/fundamentals/primers/promises
+				</a>
+			</p>
+			</section>
+		</section>
+      </div>
+    </div>
+
+    <script src="lib/js/head.min.js"></script>
+    <script src="js/reveal.js"></script>
+
+    <script>
+      // More info about config & dependencies:
+      // - https://github.com/hakimel/reveal.js#configuration
+      // - https://github.com/hakimel/reveal.js#dependencies
+      Reveal.initialize({
+        dependencies: [
+          { src: "plugin/markdown/marked.js" },
+          { src: "plugin/markdown/markdown.js" },
+          { src: "plugin/notes/notes.js", async: true },
+          {
+            src: "plugin/highlight/highlight.js",
+            async: true,
+            callback: function() {
+              hljs.initHighlightingOnLoad();
+            }
+          }
+        ]
+      });
+    </script>
+  </body>
+</html>
